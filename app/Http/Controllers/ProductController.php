@@ -55,6 +55,14 @@ class ProductController extends Controller
         return new ProductResource($product);
     }
 
+
+    $detals = Mailbox::where(function($query) use($authid,$userid){
+        $query->where(function($q1) use($authid,$userid){
+            $q1->where('sernder_id',$authid)->where('recev_id',$userid);
+        })->orWhere(function($q1) use($authid,$userid){
+            $q1->where('sernder_id',$userid)->where('recev_id',$authid);
+    })->orderBy('id','desc')->take(15)->get()->sortBy('id');
+
     /**
      * Show the form for editing the specified resource.
      *
