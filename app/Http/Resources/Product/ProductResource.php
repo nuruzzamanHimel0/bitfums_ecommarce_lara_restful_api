@@ -23,7 +23,7 @@ class ProductResource extends JsonResource
             'discount' => $this->discount,
             'total_price' => round(  ( $this->discount *$this->price)/100),
             'rating' => $this->reviews->count() >  0 ? round($this->reviews->sum('star')/$this->reviews->count(),2) : "NO rating yet",
-            'ratinga' => $this->reviews,
+            // 'ratinga' => $this->reviews,
             'href' =>[
                 'reviews' => route('reviews.index',['product'=>$this->id])
             ]
