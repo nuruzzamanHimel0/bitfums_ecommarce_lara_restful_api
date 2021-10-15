@@ -16,7 +16,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return  ProductCollection::collection(Product::get());
+        return  ProductCollection::collection(Product::paginate(20));
 
         // return Product::get();
     }
@@ -56,12 +56,7 @@ class ProductController extends Controller
     }
 
 
-    $detals = Mailbox::where(function($query) use($authid,$userid){
-        $query->where(function($q1) use($authid,$userid){
-            $q1->where('sernder_id',$authid)->where('recev_id',$userid);
-        })->orWhere(function($q1) use($authid,$userid){
-            $q1->where('sernder_id',$userid)->where('recev_id',$authid);
-    })->orderBy('id','desc')->take(15)->get()->sortBy('id');
+
 
     /**
      * Show the form for editing the specified resource.

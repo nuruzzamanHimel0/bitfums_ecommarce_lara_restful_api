@@ -23,5 +23,6 @@ class ProductCollection extends Resource
                 'reviews' => route('products.show',['product'=>$this->id])
             ]
         ];
+
     }
 }
