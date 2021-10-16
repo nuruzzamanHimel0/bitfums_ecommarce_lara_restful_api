@@ -3,26 +3,19 @@
 namespace App\Exceptions;
 
 use Exception;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Exceptions\ExceptionTrait;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 
 class Handler extends ExceptionHandler
 {
-    /**
-     * A list of the exception types that are not reported.
-     *
-     * @var array
-     */
+    use ExceptionTrait;
+
     protected $dontReport = [
         //
     ];
 
-    /**
-     * A list of the inputs that are never flashed for validation exceptions.
-     *
-     * @var array
-     */
+
     protected $dontFlash = [
         'password',
         'password_confirmation',
@@ -50,21 +43,12 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+
+        // dd($exception instanceof NotFoundHttpException);
         if($request->expectsJson()){
-            if ($exception instanceof ModelNotFoundException) {
-                return response()->json([
-                    'message' => $exception->getMessage(),
 
-                ],400);
-            }
-            else if ($exception instanceof NotFoundHttpException) {
-                return response()->json([
-                    'message' => "Incorrect Route",
-
-                ],400);
-            }
+            return $this->apiException($request,$exception);
         }
-
 
         return parent::render($request, $exception);
     }
