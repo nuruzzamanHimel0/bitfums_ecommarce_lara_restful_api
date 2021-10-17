@@ -2,13 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ReviewRequest;
 use App\Http\Resources\Reivew\ReviewCollection;
+use App\Http\Resources\Reivew\ReviewResource;
 use App\Model\Product;
 use App\Model\Review;
 use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
+    public function __construct(){
+
+        $this->middleware('auth:api')->except('index','show');
+    }
 
     public function index(Product $product)
     {
@@ -26,15 +32,19 @@ class ReviewController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+
+    public function store(ReviewRequest $request,Product $product)
     {
-        //
+        $request['product_id'] = $product->id;
+
+        $review_create = Review::create($request->all());
+
+        return response()->json([
+            'status' => 'success',
+            'data' => new ReviewResource($review_create)
+        ],200);
+
+        return $request;
     }
 
     /**
