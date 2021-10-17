@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\ProductNotBelongsToUser;
 use App\Http\Resources\Product\ProductCollection;
 use App\Model\Product;
 use Illuminate\Http\Request;
@@ -94,6 +95,9 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+
+        $this->productUserCheck($product);
+
         $request['details'] = $request->description;
         unset( $request['description']);
         // return $request->all();
@@ -112,12 +116,6 @@ class ProductController extends Controller
 
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Model\Product  $product
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Product $product)
     {
         $product->delete();
@@ -127,4 +125,11 @@ class ProductController extends Controller
             'message' => "Product Delete Sussffully"
         ]);
     }
+
+    public function productUserCheck($product){
+        if(auth()->user()->id !== $product->user_id){
+            throw new ProductNotBelongsToUser;
+        }
+    }
+
 }
